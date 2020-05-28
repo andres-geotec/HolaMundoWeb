@@ -1,0 +1,678 @@
+<///Traducido y modificado por www.creatupropiaweb.com///><SCRIPT language=JavaScript>
+dCol='0000FF';//date colour.
+fCol='FF00FF';//face colour.
+sCol='00CC00';//seconds colour.
+mCol='FF0000';//minutes colour.
+hCol='FF0000';//hours colour.
+ClockHeight=30;
+ClockWidth=30;
+ClockFromMouseY=0;
+ClockFromMouseX=100;
+
+//Alter nothing below! Alignments will be lost!
+
+d=new Array("DOMINGO","LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","SABADO");
+m=new Array("ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE");
+date=new Date();
+day=date.getDate();
+year=date.getYear();
+if (year < 2000) year=year+1900;
+TodaysDate=" "+d[date.getDay()]+" "+day+" "+m[date.getMonth()]+" "+year;
+D=TodaysDate.split('');
+H='...';
+H=H.split('');
+M='....';
+M=M.split('');
+S='.....';
+S=S.split('');
+Face='1 2 3 4 5 6 7 8 9 10 11 12';
+font='Arial';
+size=1;
+speed=0.6;
+ns=(document.layers);
+ie=(document.all);
+Face=Face.split(' ');
+n=Face.length;
+a=size*10;
+ymouse=0;
+xmouse=0;
+scrll=0;
+props="<font face="+font+" size="+size+" color="+fCol+"><B>";
+props2="<font face="+font+" size="+size+" color="+dCol+"><B>";
+Split=360/n;
+Dsplit=360/D.length;
+HandHeight=ClockHeight/4.5
+HandWidth=ClockWidth/4.5
+HandY=-7;
+HandX=-2.5;
+scrll=0;
+step=0.06;
+currStep=0;
+y=new Array();x=new Array();Y=new Array();X=new Array();
+for (i=0; i < n; i++){y[i]=0;x[i]=0;Y[i]=0;X[i]=0}
+Dy=new Array();Dx=new Array();DY=new Array();DX=new Array();
+for (i=0; i < D.length; i++){Dy[i]=0;Dx[i]=0;DY[i]=0;DX[i]=0}
+if (ns){
+for (i=0; i < D.length; i++)
+document.write('<layer name="nsDate'+i+'" top=0 left=0 height='+a+' width='+a+'><center>'+props2+D[i]+'</font></center></layer>');
+for (i=0; i < n; i++)
+document.write('<layer name="nsFace'+i+'" top=0 left=0 height='+a+' width='+a+'><center>'+props+Face[i]+'</font></center></layer>');
+for (i=0; i < S.length; i++)
+document.write('<layer name=nsSeconds'+i+' top=0 left=0 width=15 height=15><font face=Arial size=3 color='+sCol+'><center><b>'+S[i]+'</b></center></font></layer>');
+for (i=0; i < M.length; i++)
+document.write('<layer name=nsMinutes'+i+' top=0 left=0 width=15 height=15><font face=Arial size=3 color='+mCol+'><center><b>'+M[i]+'</b></center></font></layer>');
+for (i=0; i < H.length; i++)
+document.write('<layer name=nsHours'+i+' top=0 left=0 width=15 height=15><font face=Arial size=3 color='+hCol+'><center><b>'+H[i]+'</b></center></font></layer>');
+}
+if (ie){
+document.write('<div id="Od" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < D.length; i++)
+document.write('<div id="ieDate" style="position:absolute;top:0px;left:0;height:'+a+';width:'+a+';text-align:center">'+props2+D[i]+'</B></font></div>');
+document.write('</div></div>');
+document.write('<div id="Of" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < n; i++)
+document.write('<div id="ieFace" style="position:absolute;top:0px;left:0;height:'+a+';width:'+a+';text-align:center">'+props+Face[i]+'</B></font></div>');
+document.write('</div></div>');
+document.write('<div id="Oh" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < H.length; i++)
+document.write('<div id="ieHours" style="position:absolute;width:16px;height:16px;font-family:Arial;font-size:16px;color:'+hCol+';text-align:center;font-weight:bold">'+H[i]+'</div>');
+document.write('</div></div>');
+document.write('<div id="Om" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < M.length; i++)
+document.write('<div id="ieMinutes" style="position:absolute;width:16px;height:16px;font-family:Arial;font-size:16px;color:'+mCol+';text-align:center;font-weight:bold">'+M[i]+'</div>');
+document.write('</div></div>')
+document.write('<div id="Os" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < S.length; i++)
+document.write('<div id="ieSeconds" style="position:absolute;width:16px;height:16px;font-family:Arial;font-size:16px;color:'+sCol+';text-align:center;font-weight:bold">'+S[i]+'</div>');
+document.write('</div></div>')
+}
+(ns)?window.captureEvents(Event.MOUSEMOVE):0;
+function Mouse(evnt){
+ymouse = (ns)?evnt.pageY+ClockFromMouseY-(window.pageYOffset):event.y+ClockFromMouseY;
+xmouse = (ns)?evnt.pageX+ClockFromMouseX:event.x+ClockFromMouseX;
+}
+(ns)?window.onMouseMove=Mouse:document.onmousemove=Mouse;
+function ClockAndAssign(){
+time = new Date ();
+secs = time.getSeconds();
+sec = -1.57 + Math.PI * secs/30;
+mins = time.getMinutes();
+min = -1.57 + Math.PI * mins/30;
+hr = time.getHours();
+hrs = -1.575 + Math.PI * hr/6+Math.PI*parseInt(time.getMinutes())/360;
+if (ie){
+Od.style.top=window.document.body.scrollTop;
+Of.style.top=window.document.body.scrollTop;
+Oh.style.top=window.document.body.scrollTop;
+Om.style.top=window.document.body.scrollTop;
+Os.style.top=window.document.body.scrollTop;
+}
+for (i=0; i < n; i++){
+ var F=(ns)?document.layers['nsFace'+i]:ieFace[i].style;
+ F.top=y[i] + ClockHeight*Math.sin(-1.0471 + i*Split*Math.PI/180)+scrll;
+ F.left=x[i] + ClockWidth*Math.cos(-1.0471 + i*Split*Math.PI/180);
+ }
+for (i=0; i < H.length; i++){
+ var HL=(ns)?document.layers['nsHours'+i]:ieHours[i].style;
+ HL.top=y[i]+HandY+(i*HandHeight)*Math.sin(hrs)+scrll;
+ HL.left=x[i]+HandX+(i*HandWidth)*Math.cos(hrs);
+ }
+for (i=0; i < M.length; i++){
+ var ML=(ns)?document.layers['nsMinutes'+i]:ieMinutes[i].style;
+ ML.top=y[i]+HandY+(i*HandHeight)*Math.sin(min)+scrll;
+ ML.left=x[i]+HandX+(i*HandWidth)*Math.cos(min);
+ }
+for (i=0; i < S.length; i++){
+ var SL=(ns)?document.layers['nsSeconds'+i]:ieSeconds[i].style;
+ SL.top=y[i]+HandY+(i*HandHeight)*Math.sin(sec)+scrll;
+ SL.left=x[i]+HandX+(i*HandWidth)*Math.cos(sec);
+ }
+for (i=0; i < D.length; i++){
+ var DL=(ns)?document.layers['nsDate'+i]:ieDate[i].style;
+ DL.top=Dy[i] + ClockHeight*1.5*Math.sin(currStep+i*Dsplit*Math.PI/180)+scrll;
+ DL.left=Dx[i] + ClockWidth*1.5*Math.cos(currStep+i*Dsplit*Math.PI/180);
+ }
+currStep-=step;
+}
+function Delay(){
+scrll=(ns)?window.pageYOffset:0;
+Dy[0]=Math.round(DY[0]+=((ymouse)-DY[0])*speed);
+Dx[0]=Math.round(DX[0]+=((xmouse)-DX[0])*speed);
+for (i=1; i < D.length; i++){
+Dy[i]=Math.round(DY[i]+=(Dy[i-1]-DY[i])*speed);
+Dx[i]=Math.round(DX[i]+=(Dx[i-1]-DX[i])*speed);
+}
+y[0]=Math.round(Y[0]+=((ymouse)-Y[0])*speed);
+x[0]=Math.round(X[0]+=((xmouse)-X[0])*speed);
+for (i=1; i < n; i++){
+y[i]=Math.round(Y[i]+=(y[i-1]-Y[i])*speed);
+x[i]=Math.round(X[i]+=(x[i-1]-X[i])*speed);
+}
+ClockAndAssign();
+setTimeout('Delay()',20);
+}
+if (ns||ie)window.onload=Delay;
+</SCRIPT>
+
+
+
+
+<html>
+ <head>
+  <title>Respiraci&oacute;n</title>
+ </head>
+
+<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" bgcolor="#999999">
+  <table bgcolor="#FFFFFF" align="center" width="1300">
+   <tr>
+    <td>
+     <table width="1300" align="center" bgcolor="#00BFFF">
+      <tr>
+       <td>
+        <center>
+         <small>
+          <i>GRACIAS POR VISITARME: </i>
+          te damos una cordial bienvenida a la segunda unidad de Biologia: PROCESO    Att: 4 alumnos del 4° A
+         </small>
+        </center>
+       </td>
+      </tr>
+     </table>
+  
+     <marquee scrollamount="10" direction="left" width="50%" bgcolor="#F7F7F7">
+      <img src="imagenes/pocoyo.gif" width="120" height="160">
+      <img src="imagenes/bio.gif" width="200" height="160">
+     </marquee>
+     <a href="http://www.cienciaybiologia.com/">
+      <img src="imagenes/biologia (1).jpg" width="643" height="160">
+     </a>
+  
+  <!--este es el menu-->
+     <table width="1000" align="center">
+      <tr>
+       <td>
+        <center>
+		<a href="nutricion.html">
+         <img src="imagenes/gotop - copia.png">
+		 </a>
+         <a href="indice_porceso.html">
+          <img src="imagenes/proceso_2.jpg" width="1100">
+         </a>
+        <a href="irritabilidad.html">
+		<img src="imagenes/gotop.png">
+		</a>
+        </center>
+       </td>
+      </tr>
+      <tr>
+      <td>
+       <table>
+        <tr>
+         <td>
+          <a href="nutricion.html">
+           <img src="imagenes/nutricion.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+           <img src="imagenes/Respiracion.JPG" width="157" height="57">
+          
+         </td>
+         <td>
+          <a href="irritabilidad.html">
+           <img src="imagenes/irratabilidad.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="homeostasis.html">
+           <img src="imagenes/homeostasis.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="excresion.html">
+           <img src="imagenes/Excrecion.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="reproduccion.html">
+           <img src="imagenes/reproducion.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="transporte.html">
+           <img src="imagenes/sustancias.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="cresimiento.html">
+           <img src="imagenes/crecimiento.JPG" width="157" height="57">
+          </a>
+         </td>
+        </tr>
+        <tr>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+        </tr>
+       </table>
+      </td>
+     </tr>
+    </table>
+  
+  <!--aqui va toda la informacion-->
+  <table width="1000" align="center">
+   <tr>
+    <td>
+     
+     <h2>Respiración</h2>
+	  
+	 <fieldset>
+	  <legend align="right">
+	   <h3><font color="#666666">Respiración Pulmonar</font></h3>
+	  </legend>
+      Los pulmones humanos son estructuras pertenecientes al sistema respiratorio, se ubican en la caja torácica, delimitando a ambos lados el mediastino, sus dimensiones varían, el pulmón derecho es algo más grande que el izquierdo, debido al espacio ocupado por el corazón. Los pulmones son los órganos en los cuales la sangre recibe oxígeno desde el aire y a su vez la sangre se desprende de dióxido de carbono el cual pasa al aire. Este intercambio, se produce mediante la difusión del oxígeno y el dióxido de carbono entre la sangre y los alvéolos que forman los pulmones.
+      <br>
+	  <center><img src="imagenes/Respiración Pulmonar.jpg" width="185" height="185"></center>
+	 </fieldset>
+	 <br>
+	 <fieldset>
+	  <legend align="right">
+	   <h3><font color="#666666">Respiración por Branquias</font></h3>
+	  </legend>
+	  <table>
+	   <tr>
+	    <td>
+		 <img src="imagenes/Respiración por Branquias.jpg" width="250" height="250">
+		</td>
+		<td>
+      Las branquias son los órganos respiratorios de los animales acuáticos, mediante los que se realiza el intercambio de gases, oxígeno y dióxido de carbono, entre el medio interno y el ambiente. Los animales acuáticos captan O2 que se encuentra disuelto en el agua, el cual pasa a los fluidos internos y es transportado a los tejidos, donde las células lo requieren para la respiración celular, proceso que se realiza en orgánulos celulares llamados mitocondrias. Los animales más pequeños y de menor tasa metabólica realizan el intercambio de gases por su superficie corporal. Los más grandes o activos necesitan una superficie de intercambio más extensa, para lo que han adquirido en el curso de la evolución estructuras especializadas a las que se llama branquias.
+	    </td>
+	   </tr>
+	  </table>
+	 </fieldset>
+     <br>
+	 <fieldset>
+	  <legend align="right">
+	   <h3><font color="#666666">Respiración Cutánea</font></h3>
+	  </legend>
+	  <table>
+	   <tr>
+	    <td>
+		 <img src="imagenes/Respiración Cutánea.jpg" width="336" height="263">
+		 </td>
+	    <td>
+     La respiración cutánea es propia de los anélidos, de algunos moluscos y de los anfibios e incluso de ciertos equinodermos. En este tipo de respiración hay que distinguir el tegumento corporal, que configura la estructura respiratoria, y la piel, a través de la cual se realiza el intercambio gaseoso, El intercambio gaseoso se realiza a través de la epidermis, siempre y cuando la cutícula externa esté húmeda, algo que se consigue porque, intercaladas entre las células cúbicas del epitelio, hay células glandulares. Los anfibios, como por ejemplo las ranas y sapos, respiran en el interior del agua a través de branquias; cuando sufren su metamorfosis para entrar en la edad adulta, pierden esas branquias y desarrollan unos pulmones para poder respirar en tierra.
+	    </td>
+	   </tr>
+	  </table>
+	 </fieldset>
+	 <br>
+	 <fieldset>
+	  <legend align="right">
+       <h3><font color="#666666">Respiración Traqueal</font></h3>
+	  </legend>
+	  <table>
+	   <tr>
+	    <td>
+		 <img src="imagenes/Respiración Traqueal.jpg" width="300" height="250">
+		</td>
+		<td>
+     Es el tipo de respiración que presentan los insectos. Las tráqueas son unos tubos que se abren al exterior por unos orificios denominados estigmas. Desde ellos penetran hacia el interior y disminuyen de diámetro, al tiempo que sus paredes se hacen más delgadas. Así, el oxígeno las atraviesa y llega a las células, al tiempo que el dióxido de carbono escapa de ellas. El conjunto de tráqueas forma el sistema traqueal que es una red de tubos vacíos, progresivamente de menor diámetro, que penetra en los tejidos y aporta oxígeno directamente a las células, sin necesidad de la intervención del aparato circulatorio.
+	    </td>
+	   </tr>
+	  </table>
+	 </fieldset>
+	 <br>
+	 <fieldset>
+	  <legend align="right">
+       <h3><font color="#666666">Respiración de las Plantas</font></h3>
+	  </legend>
+	  <table>
+	   <tr>
+	    <td>
+		 <img src="imagenes/PROC1.JPG" width="270" height="300">
+		</td> 
+		<td>
+     La Respiración de las Plantas. En las plantas, el intercambio gaseoso se realiza principalmente a través de estomas y-o lenticelas. ¿Qué es un estoma?…Formados por un par de células epidérmicas modificadas de forma arriñonada. Las estomas suelen localizarse en la parte inferior de la hoja, en la que no reciben la luz solar directa, también se encuentran en tallos herbáceos. ¿Qué es una Lenticela?…Se encuentran diseminadas en la corteza muerta de tallos y raíces. De modo típico, las lenticelas son de forma lenticular en su contorno externo, de donde se les viene el nombre. De ordinario están orientadas vertical u horizontalmente sobre el tallo, según la especie y varían en tamaño, desde apenas visible a tan grande como de 1 cm o aún de 2,5 de largo. En árboles con corteza muy fisurada, las lenticelas se encuentran en el fondo de las fisuras. La función de las lenticelas es permitir un intercambio neto de gases entre los tejidos parenquimáticos internos y la atmósfera.
+	    </td>
+	   </tr>
+	  </table>
+	  </fieldset>
+	 <br>
+	 <fieldset>
+	  <legend align="right">
+	   <h3><font color="#666666">Respiración Aeróbica</font></h3>
+	  </legend>
+	  <table>
+	   <tr>
+	    <td>
+		 <img src="imagenes/Respiración Aeróbica.jpg" width="300" height="270">
+		</td>
+		<td>
+La respiración aeróbica es un tipo de metabolismo energético en el que los seres vivos extraen energía de moléculas orgánicas, como la glucosa, por un proceso complejo en el que el carbono desoxidado y en el que el oxígeno procedente del aire es el oxidante empleado. La respiración aeróbica es el proceso responsable de que la mayoría de los seres vivos, los llamados por ello aerobios, requieran oxígeno. La respiración aeróbica es propia de los organismos eucariontes en general y de algunos tipos de bacterias. El oxígeno que, como cualquier gas, atraviesa sin obstáculos las membranas biológicas, atraviesa primero la membrana plasmática y luego las membranas mitocondriales, siendo en la matriz de la mitocondria donde se une a electrones y protones formando agua. En esa oxidación final, que es compleja, y en procesos anteriores se obtiene la energía necesaria para la fosforilación del ATP.
+        </td>
+	   </tr>
+	  </table>
+	 </fieldset>
+     <br>
+     <fieldset>
+	  <legend align="right">
+	   <h3><font color="#666666">Respiración Anaeróbica</font></h3>
+	  </legend>
+ 	  <table>
+	   <tr>
+	    <td>
+		 <img src="imagenes/Respiración Anaeróbica.jpg" width="275" height="191">
+		</td>
+		<td>
+     La respiración anaeróbica es un proceso biológico de óxido de monosacáridos y otros compuestos en el que el aceptor terminal de electrones es una molécula inorgánica distinta del oxígeno, y más raramente una molécula orgánica. La realizan exclusivamente algunos grupos de bacterias, transportadora de electrones análoga a la de las mitocondria en la respiración aeróbica. No debe confundirse con la fermentación, que es un proceso también anaeróbico, pero en el que no participa nada parecido a una cadena transportadora de electrones y el aceptor final de electrones es siempre una molécula orgánica. En la respiración anaeróbica no se usa oxígeno, sino que para la misma función se emplea otra sustancia oxidante distinta, como el sulfato o el nitrato.
+	    </td>
+	   </tr>
+	  </table>
+	 </fieldset>
+	 <br>
+	 
+     <center>
+     <embed src="videos/RESPIRACION.avi" width="690" height="690" autostart="false"></embed>
+     </center> 
+	</td>
+	
+    <!--aqui la publicidad-->
+      <td width="300">
+       <fieldset>
+        <legend align="center">
+         <img src="imagenes/btn_comment.gif">	
+        </legend>
+        <center>
+	 <small>¿CUAL ES TU NOMBRE? </small>
+         <input type="text"><br>
+        </center>
+        <br>
+        <table>
+         <tr>
+          <td>
+           <img src="imagenes/pocoyo_6.gif">       
+          </td>
+          <td>    
+           <small>¿QUE TAL TE PARECE ESTA PAGINA?: </small>
+           <select>
+	    <option>BUENA</option>
+	    <option>MUY BUENA</option>
+	    <option>EXELENTE</option>
+           </select>
+           <br><br>
+           <small>ENVIANOS TU COMENTARIO </small>
+           <textarea></textarea>	   
+          </td>
+         </tr>
+        </table>
+	   <center>
+	    <a href=".">
+	  <img src="imagenes/icon_8.gif" alt="enviar">
+	 </a>
+	 </center>
+	 <hr>
+	 <center>
+	 <img src="imagenes/btn_imprimir.gif">
+	 <img src="imagenes/Monitor.png">
+	 <img src="imagenes/smallEnvelope.jpg">
+	 <img src="imagenes/icon18.gif">
+	 <img src="imagenes/fc-edit.png">
+	 <img src="imagenes/rss.png">
+	 <img src="imagenes/trash.gif">
+	 <img src="imagenes/icon18_wrench_allbkg.png">
+	 <img src="imagenes/ico_aumentar.gif">
+	 <img src="imagenes/ico_reducir.gif">
+	 <img src="imagenes/icon.png">
+	 <hr>
+	 <img src="imagenes/ajx_loading.gif">
+	 <img src="imagenes/twitter-a.png" height="23">
+	 <img src="imagenes/blogger-simple-kahki.gif" height="23">
+	 <img src="imagenes/face_2.JPG" height="23">
+	 <img src="imagenes/ajx_loading.gif">
+	 </center>
+    </fieldset>
+	
+	<br><br>
+	<center>
+	<img src="imagenes/creatividad_inteligente.jpg" width="295">
+	<br><br><br>
+	<a href="http://biologia.laguia2000.com/">
+	<img src="imagenes/logo.png" width="290">
+	</a>
+	<em>Busca mas infotmacion en: <a href="http://biologia.laguia2000.com/">La guia</a></em>
+	</center>
+	<br><br>
+	
+	<fieldset>
+	 <legend align="center">
+	  <img src="imagenes/plus_google.gif">	 
+	  </legend>
+	<table>
+	 <tr>
+	  <td>
+	<font color="#3399FF">
+	 <big><big>OBTEN MAS INFORMACION</big></big>
+        </font>	  
+	  </td>
+	   <td>
+	   <img src="imagenes/pocoyo_8.gif" width="70" height="55" align="right">	  
+	   </td>
+	  </tr>
+	 </table>
+	 <br>
+	 <center>
+	  <big><i>
+	   <a href="http://www.cienciaybiologia.com/libros.html">LIBROS</a>
+	  </i></big>
+	 </center>
+	  <br>
+	 <table align="center">
+	  <tr>
+           <td>
+	  <b>Biología marina</b> 
+	  <a href="http://www.cienciaybiologia.com/libros/libros-biologia-marina.php">
+	   <img src="imagenes/biologia-marina.jpg" width="125" height="87">	 
+	  </a>
+	  <br><br>
+	 </td>
+	 <td>
+	  <b>Biología molecular</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-biologia-molecular.php">
+	   <img src="imagenes/biologia-molecular.jpg" width="125" height="87">	
+	  </a>
+	  <br><br>
+	 </td>
+	 </tr>
+	 <tr>
+	 <td>
+	  <b>Botánica</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-botanica.php">
+	   <img src="imagenes/botanica.jpg" width="125" height="87">	  
+	   </a>
+	   <br><br>
+	 </td>
+	 <td>
+	  <b>Ecología</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-ecologia.php">
+	   <img src="imagenes/ecologia.jpg" width="125" height="87">	  
+	  </a>
+	  <br><br>
+	 </td>
+	 </tr>
+	 <tr>
+	 <td>
+	   <small><b>Ecologismo y lifestyle</b></small>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-ecologismo-lifestyle.php">
+	   <img src="imagenes/ecologismo.jpg" width="125" height="87">	  
+	  </a>
+	  <br><br>
+  	 </td>
+	 <td>
+	  <b>Estudios y ensayos</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-estudios-ensayos-cientificos.php">
+	   <img src="imagenes/ensayos.jpg" width="125" height="87">	  
+	  </a>
+	  <br><br>
+	 </td>
+	 </tr>
+	 <tr>
+	 <td>
+	  <b>Microbiología</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-microbiologia.php">
+	  <img src="imagenes/microbiologia.gif" width="125" height="87">	  
+	  </a>
+	 </td>
+	 <td>
+	  <b>Guías de especies</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-guia-especies.php">
+	  <img src="imagenes/anemona-incrustante-amarilla-1-p.jpg" width="125" height="87">	  
+	  </a>
+	 </td>
+	 </tr>
+	 </table>
+	</fieldset>
+	
+	<br><br>
+	<center>
+	<img src="imagenes/mariposa.gif" width="120">
+	<br><br>
+	<img src="imagenes/sol.jpg" width="295">
+	<br><br>
+	<img src="imagenes/pocoyo_7.gif">
+	<img src="imagenes/sonrrie.jpg" width="295">
+	<em>Solo se feliz</em>
+	<br><br>
+	<img src="imagenes/love_geek.jpg" width="295">
+	<em>¿Tienes duda en tus claces de programacion?<br>
+	Nose mucho pero te puedo ayudar</em><br>
+	<img src="imagenes/andy.jpg" width="35" height="35">
+	 <strong>Andy Martinez</strong><br>
+	 <img src="imagenes/email.jpg" height="35">
+	 <a href="https://www.facebook.com/andy.martinezgonzalez.10">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+	<br><br>
+	<br><br>
+	<img src="imagenes/compas.jpg" width="295">
+	<br><br>
+	
+	</center>
+    </td>
+   </tr>
+  </table>
+  
+  <!--cita biblografica: http://www.estudioteca.net/bachillerato/biologia/tipos-de-respiracion-2/-->
+  
+  <h2><tt>Agradecemos a: <a href="http://www.estudioteca.net/bachillerato/biologia/tipos-de-respiracion-2/">ESTUDIATECA</a>  por la informacion</tt></h2>
+  
+  <hr>
+  <table align="center">
+   <caption align="right" valign="top">
+   Si te gusto la pagina, contactanos
+   </caption>
+   <tr>
+    <td>
+	<a href="nutricion.html">
+	 <img src="imagenes/gotop - copia.png">
+	</a>
+	</td>
+    <td>
+	<img src="imagenes/pocoyo_3.gif">
+    </td>
+    <td>
+	 <table>
+	  <tr>
+	   <td>
+	 <img src="imagenes/cesar.jpg" width="35" height="35">
+	   </td>
+	   <td>
+	 <strong>Cesar Gonzalez</strong>
+	   </td>
+	   <td>
+	 <img src="imagenes/email.jpg" height="35">
+	 <a href="https://www.facebook.com/cesar.gonzalezhernandez.77">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+	   </td>
+	   <td width="20">
+	   </td>
+	   <td>
+	 <img src="imagenes/andy.jpg" width="35" height="35">
+	   </td>
+	   <td>
+	 <strong>Andy Martinez</strong>
+	   </td>
+	   <td>
+	 <img src="imagenes/email.jpg" height="35">
+	 <a href="https://www.facebook.com/andy.martinezgonzalez.10">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+	  </td>
+	  </tr>
+	  <tr>
+	   <td>
+           <img src="imagenes/isela.jpg" width="35" height="35">
+          </td>
+          <td>
+           <strong>Nenita Gomez</strong>
+          </td>
+          <td>
+           <img src="imagenes/email.jpg" height="35">
+           <a href="">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+          </td>
+          <td>
+          </td>
+          <td>
+           <img src="imagenes/chilo.jpg" width="35" height="35">
+          </td>
+          <td>
+           <strong>Isidro Molina</strong>
+          </td>
+          <td>
+           <img src="imagenes/email.jpg" height="35">
+           <a href="https://www.facebook.com/isidro.molinavillanueva">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+          </td>
+         </tr>
+        </table>
+		<td>
+		<a href="irritabilidad.html">
+		 <img src="imagenes/gotop.png">
+		 </a>
+       </td>
+      </tr>
+     </table>
+     <center>
+      <a href="https://www.facebook.com/">
+       <img src="imagenes/17-728x90.jpg">
+      </a>
+     </center>
+    </td>
+   </tr>
+  </table> 
+ <br>
+ </body>
+</html>

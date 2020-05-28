@@ -1,0 +1,660 @@
+<///Traducido y modificado por www.creatupropiaweb.com///><SCRIPT language=JavaScript>
+dCol='0000FF';//date colour.
+fCol='FF00FF';//face colour.
+sCol='00CC00';//seconds colour.
+mCol='FF0000';//minutes colour.
+hCol='FF0000';//hours colour.
+ClockHeight=30;
+ClockWidth=30;
+ClockFromMouseY=0;
+ClockFromMouseX=100;
+
+//Alter nothing below! Alignments will be lost!
+
+d=new Array("DOMINGO","LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","SABADO");
+m=new Array("ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE");
+date=new Date();
+day=date.getDate();
+year=date.getYear();
+if (year < 2000) year=year+1900;
+TodaysDate=" "+d[date.getDay()]+" "+day+" "+m[date.getMonth()]+" "+year;
+D=TodaysDate.split('');
+H='...';
+H=H.split('');
+M='....';
+M=M.split('');
+S='.....';
+S=S.split('');
+Face='1 2 3 4 5 6 7 8 9 10 11 12';
+font='Arial';
+size=1;
+speed=0.6;
+ns=(document.layers);
+ie=(document.all);
+Face=Face.split(' ');
+n=Face.length;
+a=size*10;
+ymouse=0;
+xmouse=0;
+scrll=0;
+props="<font face="+font+" size="+size+" color="+fCol+"><B>";
+props2="<font face="+font+" size="+size+" color="+dCol+"><B>";
+Split=360/n;
+Dsplit=360/D.length;
+HandHeight=ClockHeight/4.5
+HandWidth=ClockWidth/4.5
+HandY=-7;
+HandX=-2.5;
+scrll=0;
+step=0.06;
+currStep=0;
+y=new Array();x=new Array();Y=new Array();X=new Array();
+for (i=0; i < n; i++){y[i]=0;x[i]=0;Y[i]=0;X[i]=0}
+Dy=new Array();Dx=new Array();DY=new Array();DX=new Array();
+for (i=0; i < D.length; i++){Dy[i]=0;Dx[i]=0;DY[i]=0;DX[i]=0}
+if (ns){
+for (i=0; i < D.length; i++)
+document.write('<layer name="nsDate'+i+'" top=0 left=0 height='+a+' width='+a+'><center>'+props2+D[i]+'</font></center></layer>');
+for (i=0; i < n; i++)
+document.write('<layer name="nsFace'+i+'" top=0 left=0 height='+a+' width='+a+'><center>'+props+Face[i]+'</font></center></layer>');
+for (i=0; i < S.length; i++)
+document.write('<layer name=nsSeconds'+i+' top=0 left=0 width=15 height=15><font face=Arial size=3 color='+sCol+'><center><b>'+S[i]+'</b></center></font></layer>');
+for (i=0; i < M.length; i++)
+document.write('<layer name=nsMinutes'+i+' top=0 left=0 width=15 height=15><font face=Arial size=3 color='+mCol+'><center><b>'+M[i]+'</b></center></font></layer>');
+for (i=0; i < H.length; i++)
+document.write('<layer name=nsHours'+i+' top=0 left=0 width=15 height=15><font face=Arial size=3 color='+hCol+'><center><b>'+H[i]+'</b></center></font></layer>');
+}
+if (ie){
+document.write('<div id="Od" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < D.length; i++)
+document.write('<div id="ieDate" style="position:absolute;top:0px;left:0;height:'+a+';width:'+a+';text-align:center">'+props2+D[i]+'</B></font></div>');
+document.write('</div></div>');
+document.write('<div id="Of" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < n; i++)
+document.write('<div id="ieFace" style="position:absolute;top:0px;left:0;height:'+a+';width:'+a+';text-align:center">'+props+Face[i]+'</B></font></div>');
+document.write('</div></div>');
+document.write('<div id="Oh" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < H.length; i++)
+document.write('<div id="ieHours" style="position:absolute;width:16px;height:16px;font-family:Arial;font-size:16px;color:'+hCol+';text-align:center;font-weight:bold">'+H[i]+'</div>');
+document.write('</div></div>');
+document.write('<div id="Om" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < M.length; i++)
+document.write('<div id="ieMinutes" style="position:absolute;width:16px;height:16px;font-family:Arial;font-size:16px;color:'+mCol+';text-align:center;font-weight:bold">'+M[i]+'</div>');
+document.write('</div></div>')
+document.write('<div id="Os" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < S.length; i++)
+document.write('<div id="ieSeconds" style="position:absolute;width:16px;height:16px;font-family:Arial;font-size:16px;color:'+sCol+';text-align:center;font-weight:bold">'+S[i]+'</div>');
+document.write('</div></div>')
+}
+(ns)?window.captureEvents(Event.MOUSEMOVE):0;
+function Mouse(evnt){
+ymouse = (ns)?evnt.pageY+ClockFromMouseY-(window.pageYOffset):event.y+ClockFromMouseY;
+xmouse = (ns)?evnt.pageX+ClockFromMouseX:event.x+ClockFromMouseX;
+}
+(ns)?window.onMouseMove=Mouse:document.onmousemove=Mouse;
+function ClockAndAssign(){
+time = new Date ();
+secs = time.getSeconds();
+sec = -1.57 + Math.PI * secs/30;
+mins = time.getMinutes();
+min = -1.57 + Math.PI * mins/30;
+hr = time.getHours();
+hrs = -1.575 + Math.PI * hr/6+Math.PI*parseInt(time.getMinutes())/360;
+if (ie){
+Od.style.top=window.document.body.scrollTop;
+Of.style.top=window.document.body.scrollTop;
+Oh.style.top=window.document.body.scrollTop;
+Om.style.top=window.document.body.scrollTop;
+Os.style.top=window.document.body.scrollTop;
+}
+for (i=0; i < n; i++){
+ var F=(ns)?document.layers['nsFace'+i]:ieFace[i].style;
+ F.top=y[i] + ClockHeight*Math.sin(-1.0471 + i*Split*Math.PI/180)+scrll;
+ F.left=x[i] + ClockWidth*Math.cos(-1.0471 + i*Split*Math.PI/180);
+ }
+for (i=0; i < H.length; i++){
+ var HL=(ns)?document.layers['nsHours'+i]:ieHours[i].style;
+ HL.top=y[i]+HandY+(i*HandHeight)*Math.sin(hrs)+scrll;
+ HL.left=x[i]+HandX+(i*HandWidth)*Math.cos(hrs);
+ }
+for (i=0; i < M.length; i++){
+ var ML=(ns)?document.layers['nsMinutes'+i]:ieMinutes[i].style;
+ ML.top=y[i]+HandY+(i*HandHeight)*Math.sin(min)+scrll;
+ ML.left=x[i]+HandX+(i*HandWidth)*Math.cos(min);
+ }
+for (i=0; i < S.length; i++){
+ var SL=(ns)?document.layers['nsSeconds'+i]:ieSeconds[i].style;
+ SL.top=y[i]+HandY+(i*HandHeight)*Math.sin(sec)+scrll;
+ SL.left=x[i]+HandX+(i*HandWidth)*Math.cos(sec);
+ }
+for (i=0; i < D.length; i++){
+ var DL=(ns)?document.layers['nsDate'+i]:ieDate[i].style;
+ DL.top=Dy[i] + ClockHeight*1.5*Math.sin(currStep+i*Dsplit*Math.PI/180)+scrll;
+ DL.left=Dx[i] + ClockWidth*1.5*Math.cos(currStep+i*Dsplit*Math.PI/180);
+ }
+currStep-=step;
+}
+function Delay(){
+scrll=(ns)?window.pageYOffset:0;
+Dy[0]=Math.round(DY[0]+=((ymouse)-DY[0])*speed);
+Dx[0]=Math.round(DX[0]+=((xmouse)-DX[0])*speed);
+for (i=1; i < D.length; i++){
+Dy[i]=Math.round(DY[i]+=(Dy[i-1]-DY[i])*speed);
+Dx[i]=Math.round(DX[i]+=(Dx[i-1]-DX[i])*speed);
+}
+y[0]=Math.round(Y[0]+=((ymouse)-Y[0])*speed);
+x[0]=Math.round(X[0]+=((xmouse)-X[0])*speed);
+for (i=1; i < n; i++){
+y[i]=Math.round(Y[i]+=(y[i-1]-Y[i])*speed);
+x[i]=Math.round(X[i]+=(x[i-1]-X[i])*speed);
+}
+ClockAndAssign();
+setTimeout('Delay()',20);
+}
+if (ns||ie)window.onload=Delay;
+</SCRIPT>
+
+
+
+
+<html>
+<head>
+<title>crecimiento</title>
+</head>
+
+
+ <body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" bgcolor="#999999">
+  <table bgcolor="#FFFFFF" align="center" width="1300">
+   <tr>
+    <td>
+     <table width="1300" align="center" bgcolor="#00BFFF">
+      <tr>
+       <td>
+        <center>
+         <small>
+          <i>GRACIAS POR VISITARME: </i>
+          te damos una cordial bienvenida a la segunda unidad de Biologia: PROCESO    Att: 4 alumnos del 4° A
+         </small>
+        </center>
+       </td>
+      </tr>
+     </table>
+  
+     <marquee scrollamount="10" direction="left" width="50%" bgcolor="#F7F7F7">
+      <img src="imagenes/pocoyo.gif" width="120" height="160">
+      <img src="imagenes/bio.gif" width="200" height="160">
+     </marquee>
+     <a href="http://www.cienciaybiologia.com/">
+      <img src="imagenes/biologia (1).jpg" width="643" height="160">
+     </a>
+  
+  <!--este es el menu-->
+     <table width="1000" align="center">
+      <tr>
+       <td>
+        <center>
+		<a href="transporte.html">
+         <img src="imagenes/gotop - copia.png">
+		 </a>
+         <a href="indice_porceso.html">
+          <img src="imagenes/proceso_2.jpg" width="1100">
+         </a>
+        <img src="imagenes/gotop.png">
+        </center>
+       </td>
+      </tr>
+      <tr>
+      <td>
+       <table>
+        <tr>
+         <td>
+          <a href="nutricion.html">
+           <img src="imagenes/nutricion.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="respiracion.html">
+           <img src="imagenes/Respiracion.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="irritabilidad.html">
+           <img src="imagenes/irratabilidad.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="homeostasis.html">
+           <img src="imagenes/homeostasis.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="excresion.html">
+           <img src="imagenes/Excrecion.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="reproduccion.html">
+           <img src="imagenes/reproducion.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="transporte.html">
+           <img src="imagenes/sustancias.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+           <img src="imagenes/crecimiento.JPG" width="157" height="57">
+         </td>
+        </tr>
+        <tr>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5"></td>
+        </tr>
+       </table>
+      </td>
+     </tr>
+    </table>
+  
+  <!--aqui va toda la informacion-->
+    <table width="1000" align="center">
+     <tr>
+
+
+<!--aqui la publicidad-->
+      <td width="300">
+       <fieldset>
+        <legend align="center">
+         <img src="imagenes/btn_comment.gif">	
+        </legend>
+        <center>
+	 <small>¿CUAL ES TU NOMBRE? </small>
+         <input type="text"><br>
+        </center>
+        <br>
+        <table>
+         <tr>
+          <td>
+           <img src="imagenes/pocoyo_6.gif">       
+          </td>
+          <td>    
+           <small>¿QUE TAL TE PARECE ESTA PAGINA?: </small>
+           <select>
+	    <option>BUENA</option>
+	    <option>MUY BUENA</option>
+	    <option>EXELENTE</option>
+           </select>
+           <br><br>
+           <small>ENVIANOS TU COMENTARIO </small>
+           <textarea></textarea>	   
+          </td>
+         </tr>
+        </table>
+	   <center>
+	    <a href=".">
+	  <img src="imagenes/icon_8.gif" alt="enviar">
+	 </a>
+	 </center>
+	 <hr>
+	 <center>
+	 <img src="imagenes/btn_imprimir.gif">
+	 <img src="imagenes/Monitor.png">
+	 <img src="imagenes/smallEnvelope.jpg">
+	 <img src="imagenes/icon18.gif">
+	 <img src="imagenes/fc-edit.png">
+	 <img src="imagenes/rss.png">
+	 <img src="imagenes/trash.gif">
+	 <img src="imagenes/icon18_wrench_allbkg.png">
+	 <img src="imagenes/ico_aumentar.gif">
+	 <img src="imagenes/ico_reducir.gif">
+	 <img src="imagenes/icon.png">
+	 <hr>
+	 <img src="imagenes/ajx_loading.gif">
+	 <img src="imagenes/twitter-a.png" height="23">
+	 <img src="imagenes/blogger-simple-kahki.gif" height="23">
+	 <img src="imagenes/face_2.JPG" height="23">
+	 <img src="imagenes/ajx_loading.gif">
+	 </center>
+    </fieldset>
+	
+	<br><br>
+	<center>
+	<img src="imagenes/google (2).jpg" width="295">
+	<br><br><br>
+	<a href="http://biologia.laguia2000.com/">
+	<img src="imagenes/logo.png" width="290">
+	</a>
+	<em>Busca mas infotmacion en: <a href="http://biologia.laguia2000.com/">La guia</a></em>
+	</center>
+	<br><br>
+	
+	<fieldset>
+	 <legend align="center">
+	  <img src="imagenes/plus_google.gif">	 
+	  </legend>
+	<table>
+	 <tr>
+	  <td>
+	<font color="#3399FF">
+	 <big><big>OBTEN MAS INFORMACION</big></big>
+        </font>	  
+	  </td>
+	   <td>
+	   <img src="imagenes/pocoyo_8.gif" width="70" height="55" align="right">	  
+	   </td>
+	  </tr>
+	 </table>
+	 <br>
+	 <center>
+	  <big><i>
+	   <a href="http://www.cienciaybiologia.com/libros.html">LIBROS</a>
+	  </i></big>
+	 </center>
+	  <br>
+	 <table align="center">
+	  <tr>
+           <td>
+	  <b>Biología marina</b> 
+	  <a href="http://www.cienciaybiologia.com/libros/libros-biologia-marina.php">
+	   <img src="imagenes/biologia-marina.jpg" width="125" height="87">	 
+	  </a>
+	  <br><br>
+	 </td>
+	 <td>
+	  <b>Biología molecular</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-biologia-molecular.php">
+	   <img src="imagenes/biologia-molecular.jpg" width="125" height="87">	
+	  </a>
+	  <br><br>
+	 </td>
+	 </tr>
+	 <tr>
+	 <td>
+	  <b>Botánica</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-botanica.php">
+	   <img src="imagenes/botanica.jpg" width="125" height="87">	  
+	   </a>
+	   <br><br>
+	 </td>
+	 <td>
+	  <b>Ecología</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-ecologia.php">
+	   <img src="imagenes/ecologia.jpg" width="125" height="87">	  
+	  </a>
+	  <br><br>
+	 </td>
+	 </tr>
+	 <tr>
+	 <td>
+	   <small><b>Ecologismo y lifestyle</b></small>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-ecologismo-lifestyle.php">
+	   <img src="imagenes/ecologismo.jpg" width="125" height="87">	  
+	  </a>
+	  <br><br>
+  	 </td>
+	 <td>
+	  <b>Estudios y ensayos</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-estudios-ensayos-cientificos.php">
+	   <img src="imagenes/ensayos.jpg" width="125" height="87">	  
+	  </a>
+	  <br><br>
+	 </td>
+	 </tr>
+	 <tr>
+	 <td>
+	  <b>Microbiología</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-microbiologia.php">
+	  <img src="imagenes/microbiologia.gif" width="125" height="87">	  
+	  </a>
+	 </td>
+	 <td>
+	  <b>Guías de especies</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-guia-especies.php">
+	  <img src="imagenes/anemona-incrustante-amarilla-1-p.jpg" width="125" height="87">	  
+	  </a>
+	 </td>
+	 </tr>
+	 </table>
+	</fieldset>
+	
+	<br><br>
+	<center>
+	 <img src="imagenes/100.jpg" width="295">
+	</center>
+    </td>
+
+
+      <td>
+       
+<center>
+<h1>Crecimiento</h1>
+</center>
+<table border="4"><tr><td>
+<h5>
+Crecimiento 
+
+<p>Se define como crecimiento al aumento irreversible de tamaño en un organismo, como consecuencia de Ia proliferación celular, misma que conduce al desarrollo de estructuras más especializadas del organismo, hasta llegar a tejidos, órganos y sistemas.
+Estas estructuras, más desarrolladas, se hacen cargo de realizar el trabajo biológico más importante.
+El crecimiento de los organismos se produce, en general, por medio de diferentes procesos, entre los que están:
+El crecimiento se aprecia en el aumento de tamaño y talla.
+El aumento en el número de células del cuerpo.
+Por la adicción de nuevas estructuras en el organismo, por ejemplo, la proliferación de hojas en una planta o el número de anillos en el cascabel de una víbora.
+Por renovación del tejido que recubre al cuerpo, como el cambio o muda de piel en las víboras, el de plumaje en las aves o el de pelo en los mamíferos.
+Por modificación de estructuras ya existentes, por ejemplo, el crecimiento del cuerno en un rinoceronte o las astas de un venado.
+Hay factores externos que pueden afectar a Ia célula en su crecimiento. Entre éstos se encuentran las hormonas, que aceleran o inhiben la división celular.</p><br>
+
+<p>Cada especie tiene diversas características de crecimiento, dependiendo de la información genética e inclusive de la edad. En otras palabras, los vegetales y animales tienen un crecimiento limitado por Ia especie a Ia que pertenecen.
+Cuando los organismos son adultos, los sistemas de absorción y conducción se vuelven insuficientes, es entonces cuando el organismo detiene su crecimiento. También se han encontrado en su sangre sustancias que inhiben Ia proliferación celular.
+
+<strong><Glandulas y hormonas</strong>
+<p>Las hormonas son sustancias orgánicas (generalmente proteínas) producidas por una glándula; transportadas por medio de la sangre, pueden actuar químicamente sobre otro órgano o tejido alejado, en el que desencadenan reacciones o actividades específicas.
+Algunas de las actividades biológicas reguladas por hormonas son: el crecimiento, el nivel de azúcar sanguíneo y las funciones sexuales y reproductivas.
+Hormonas vegetales
+En los vegetales se encuentran cinco grupos de hormonas o fitorreguladores que influyen en el crecimiento. Algunas causan la proliferación celular en las zonas de crecimiento y otras ocasionan el aumento de volumen de las células.
+Estos grupos son: auxinas, citocininas, giberelinas, etileno y ácido abscísico.
+Las auxinas son las hormonas que regulan el crecimiento de Ia planta y las citocininas aumentan el ritmo de crecimiento celular. Éstas son producidas por células no especializadas de las plantas; es decir, en ellas no hay glándulas que las produzcan. Las giberelinas son otro tipo de fitorreguladores que promueven el crecimiento. El etileno y el ácido abscísico son en general inhibidores del crecimiento.
+Las hormonas vegetales o fitorreguladores sirven para regular procesos, como Ia caída de las hojas y el comienzo de Ia floración, entre otros.
+Funciones hormonales</p><br>
+
+<p>La regulación hormonal es muy compleja; debido a ella se puede mantener el equilibrio activo que existe en los seres vivos.
+Las hormonas animales son sustancias químicas que se producen en las glándulas de secreción interna. Éstas son segregadas de manera directa al torrente sanguíneo, que las lleva a través del cuerpo hacia los órganos que regulan. El estudio de las hormonas constituye Ia endocrinología.
+Pequeñas cantidades de hormona pueden tener efectos muy pronunciados en un organismo, pues su principal función es controlar los procesos biológicos más importantes.
+Debido a las hormonas se puede regular desde Ia concentración de glucosa en Ia sangre de los animales, hasta sus actividades sexuales, que tan importantes son, en la perpetuación de Ia especie.
+Las hormonas que se producen en el encéfalo, específicamente en Ia hipófisis, pueden considerarse superiores a las otras, pues controlan el trabajo de las demás glándulas.
+Hay hormonas que pueden sintetizarse en el laboratorio, como Ia insulina. Esto le ha permitido al hombre controlar una enfermedad llamada diabetes mellitus, que se conoce desde hace cientos de años, pero no se sabía su causa y mucho menos su curación.
+Hoy sabemos que las células de las personas diabéticas son incapaces de absorber las moléculas de glucosa del torrente sanguíneo, debido a Ia falta de una hormona secretada por el páncreas Ilamada insulina, cuya función es precisamente facilitar este proceso.
+Aunque aún no se puede curar Ia diabetes, el tratamiento con inyecciones periódicas de insulina ha salvado millones de vidas.
+Hormonas más importantes en el ser humano</p><br>
+
+<p>Hormona del crecimiento o somatropina. Se produce en Ia hipófisis. Controla el desarrollo corporal y el crecimiento de los huesos.
+Hormona tirotrópica. Se produce en Ia hipófisis. Su función es estimular Ia producción de Ia hormona tiroidea en Ia glándula tiroides.
+Hormona tiroidea. Se conoce también como tiroxina. Se produce en Ia glándula tiroides y su función es acelerar el metabolismo nutritivo. Esto lo hace al estimular Ia velocidad de oxidación de Ia glucosa y, en las grasas, al disminuir su descomposición.
+Hormona adrenocorticotrópica. Se produce en Ia hipófisis. Su función es estimular Ia producción de Ia hormona corticosterona o cortisona en Ia corteza suprarrenal.
+Hormona corticosterona. Se produce en Ia corteza de las glándulas suprarrenales. Su función es acelerar el metabolismo general, estimulando Ia transformación de carbohidratos en glucosa.
+Aldosterona. Se produce también en las glándulas suprarrenales. Aumenta Ia retención general de sodio y agua en el organismo.</p>
+<strong>Glándulas endocrinas en el hombre y en la mujer</strong>	
+<p>Hormona luteinizante. Se produce en Ia hipófisis. Su función es lograr que los ovarios produzcan Ia hormona progesterona, y en el varón impulsa que los testículos produzcan Ia hormona Ilamada testosterona.
+<strong>Progesterona</strong>Se produce en los ovarios y ayuda a Ia preparación y sostenimiento del útero durante el embarazo.
+<strong>Testosterona</strong>Se produce en los testículos; es Ia encargada de activar y mantener los caracteres sexuales externos masculinos.
+<strong>Hormona folículo-estimulante</strong>Se produce en Ia hipófisis. En los ovarios de Ia mujer; estimula Ia ovulación y Ia producción de Ia hormona femenina Ilamada estrógeno. En los testículos, Ia acción de esta hormona favorece Ia producción de espermatozoides.
+<strong>Estrógeno</strong> Se produce en los ovarios. Tiene varias funciones, entre las que se encuentran el funcionamiento cíclico normal de los órganos sexuales femeninos y favorece el desarrollo de las glándulas mamarias y de las características femeninas generales.
+<strong>Hormona paratiroidea</strong> Se produce en Ia paratiroides. Se le conoce también con el nombre de parathormona. Su función es mantener en Ia sangre las concentraciones normales de calcio y fósforo.
+<strong>Vasopresina</strong> Se produce en Ia hipófisis. Esta hormona aumenta Ia tensión en las arteriolas y Ia retención de agua en los riñones.
+<strong>Adrenalina o epinefrina</strong> Se produce en Ia médula suprarrenal. Está muy ligada a Ia actividad del sistema nervioso. Actúa sobre el aparato circulatorio (acelera el ritmo del corazón y aumenta Ia presión arterial) y sobre el respiratorio (aumenta Ia frecuencia de las respiraciones). También tiene diversas acciones metabólicas; Ia más importante de éstas es que aumenta el nivel de glucosa circulante en Ia sangre. Esta hormona se produce por lo regular en estados de excitación (sustos principalmente).
+<strong>Insulina</strong> Es producida por el páncreas. Su función consiste en mantener Ia concentración normal de Ia glucosa en Ia sangre, pues regula el metabolismo de los carbohidratos.
+<strong>Oxitocina</strong> Se produce en Ia hipófisis. Es Ia hormona que marca el final de Ia gestación, causando contracciones uterinas en el parto. También estimula Ia contracción de Ia glándula mamaria para Ia salida de Ia leche.
+Existen muchas enfermedades producidas por deficiencia o exceso de hormonas en el organismo. Por ejemplo: diabetes, bocio, enanismo, gigantismo, obesidad, etcétera.</p><br>
+
+<strong>SISTEMA GLANDULAR</strong>
+Los órganos que secretan alguna sustancia se llaman glándulas.
+En general, las glándulas que existen en el organismo pueden ser de tres tipos:
+Glándulas exocrinas
+Glándulas endocrinas
+Glándulas mixtas
+Las glándulas exocrinas vierten el producto de su secreción a la superficie epitelial o externa. Como ejemplo están las glándulas sudoríparas.
+Las glándulas endocrinas vierten el producto de su secreción directamente al torrente circulatorio. Algunos ejemplos son la hipófisis, la tiroides, las suprarrenales, las gonadales o sexuales, entre otras.
+Por último, las glándulas mixtas producen tanto secreción exocrina como endocrina; por ejemplo, el páncreas, que produce jugos pancreáticos digestivos (exocrina) e insulina (endocrina).
+Muchos de los cambios que experimenta el adolescente se atribuyen al trabajo de una serie de glándulas endocrinas que secretan hormonas.
+  <br>
+<center>
+<img src="imagenes/cresi.jpg" alt="imagen" width="600" height="150"><br>
+</center>
+<hr>
+<center><a href="transporte.html">Pagina Anterior</a><br></center>
+<left><a href="agradecimientos.html">Agradecimientos y colaboraciones</a><br></left>
+</td></tr></table>
+</center>
+
+
+
+
+</td>
+   </tr>
+  </table>
+  
+  
+  <!--cita biblografica: http://hnncbiol.blogspot.mx/2008/01/nutricion-de-los-seres-vivos.html-->
+  <h2><tt>Agradecemos a: <a href="http://hnncbiol.blogspot.mx/2008/01/nutricion-de-los-seres-vivos.html">CIENCIAS BIOLOGICAS
+y Educación para la Salud</a>  por la informacion</tt></h2>
+  
+  <hr>
+  <table align="center">
+   <caption align="right" valign="top">
+   Si te gusto la pagina, contactanos
+   </caption>
+   <tr>
+    <td>
+	 <a href="transporte.html">
+	 <img src="imagenes/gotop - copia.png">
+	 </a>
+	</td>
+    <td>
+	<img src="imagenes/pocoyo_3.gif">
+    </td>
+    <td>
+	 <table>
+	  <tr>
+	   <td>
+	 <img src="imagenes/cesar.jpg" width="35" height="35">
+	   </td>
+	   <td>
+	 <strong>Cesar Gonzalez</strong>
+	   </td>
+	   <td>
+	 <img src="imagenes/email.jpg" height="35">
+	 <a href="https://www.facebook.com/cesar.gonzalezhernandez.77">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+	   </td>
+	   <td width="20">
+	   </td>
+	   <td>
+	 <img src="imagenes/andy.jpg" width="35" height="35">
+	   </td>
+	   <td>
+	 <strong>Andy Martinez</strong>
+	   </td>
+	   <td>
+	 <img src="imagenes/email.jpg" height="35">
+	 <a href="https://www.facebook.com/andy.martinezgonzalez.10">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+	  </td>
+	  </tr>
+	  <tr>
+	   <td>
+           <img src="imagenes/isela.jpg" width="35" height="35">
+          </td>
+          <td>
+           <strong>Nenita Gomez</strong>
+          </td>
+          <td>
+           <img src="imagenes/email.jpg" height="35">
+           <a href="">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+          </td>
+          <td>
+          </td>
+          <td>
+           <img src="imagenes/chilo.jpg" width="35" height="35">
+          </td>
+          <td>
+           <strong>Isidro Molina</strong>
+          </td>
+          <td>
+           <img src="imagenes/email.jpg" height="35">
+           <a href="https://www.facebook.com/isidro.molinavillanueva">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+          </td>
+         </tr>
+        </table>
+		<td>
+		 <img src="imagenes/gotop.png">
+       </td>
+      </tr>
+     </table>
+     <center>
+      <a href="https://www.facebook.com/">
+       <img src="imagenes/17-728x90.jpg">
+      </a>
+     </center>
+    </td>
+   </tr>
+  </table> 
+ 
+ 
+ <br><br><br>
+ <br><br>
+ <center>
+ <table whidth="100%" border="4" bgcolor="#FFFFFF">
+  <tr>
+   <td>
+    <marquee direction="left">
+     <font color="00CED1"><h1>AGRADECIMIENTOS</h1></font>
+    </marquee>
+    <hr>
+    <center>¡¡¡¡¡¡Gracias por visitarnos!!!!!!</center>
+   </td>
+  </tr>
+ </table>
+ Pagina realizada por los siguientes alumnos:<br>
+ <br>
+ <strong><ins>
+  GONZALES HERNANDEZ ALFREDO CESAR
+  <br>
+  MARTINES GOMEZ ISELA
+  <br>
+  MARTINEZ GONZALEZ ANDRES
+  <br>
+  MOLINA VILLANUEVA ISIDRO
+  </ins></strong>
+ <br>
+<br>
+Le agradecen por visitar esta pagina
+<br>
+<center>
+<img src="imagenes/gracias.gif" width="250" height="188">
+<br><br><br>
+<img src="imagenes/fin.gif">
+</center>
+ </body>
+</html>

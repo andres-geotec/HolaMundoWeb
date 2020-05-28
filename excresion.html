@@ -1,0 +1,633 @@
+<///Traducido y modificado por www.creatupropiaweb.com///><SCRIPT language=JavaScript>
+dCol='0000FF';//date colour.
+fCol='FF00FF';//face colour.
+sCol='00CC00';//seconds colour.
+mCol='FF0000';//minutes colour.
+hCol='FF0000';//hours colour.
+ClockHeight=30;
+ClockWidth=30;
+ClockFromMouseY=0;
+ClockFromMouseX=100;
+
+//Alter nothing below! Alignments will be lost!
+
+d=new Array("DOMINGO","LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","SABADO");
+m=new Array("ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE");
+date=new Date();
+day=date.getDate();
+year=date.getYear();
+if (year < 2000) year=year+1900;
+TodaysDate=" "+d[date.getDay()]+" "+day+" "+m[date.getMonth()]+" "+year;
+D=TodaysDate.split('');
+H='...';
+H=H.split('');
+M='....';
+M=M.split('');
+S='.....';
+S=S.split('');
+Face='1 2 3 4 5 6 7 8 9 10 11 12';
+font='Arial';
+size=1;
+speed=0.6;
+ns=(document.layers);
+ie=(document.all);
+Face=Face.split(' ');
+n=Face.length;
+a=size*10;
+ymouse=0;
+xmouse=0;
+scrll=0;
+props="<font face="+font+" size="+size+" color="+fCol+"><B>";
+props2="<font face="+font+" size="+size+" color="+dCol+"><B>";
+Split=360/n;
+Dsplit=360/D.length;
+HandHeight=ClockHeight/4.5
+HandWidth=ClockWidth/4.5
+HandY=-7;
+HandX=-2.5;
+scrll=0;
+step=0.06;
+currStep=0;
+y=new Array();x=new Array();Y=new Array();X=new Array();
+for (i=0; i < n; i++){y[i]=0;x[i]=0;Y[i]=0;X[i]=0}
+Dy=new Array();Dx=new Array();DY=new Array();DX=new Array();
+for (i=0; i < D.length; i++){Dy[i]=0;Dx[i]=0;DY[i]=0;DX[i]=0}
+if (ns){
+for (i=0; i < D.length; i++)
+document.write('<layer name="nsDate'+i+'" top=0 left=0 height='+a+' width='+a+'><center>'+props2+D[i]+'</font></center></layer>');
+for (i=0; i < n; i++)
+document.write('<layer name="nsFace'+i+'" top=0 left=0 height='+a+' width='+a+'><center>'+props+Face[i]+'</font></center></layer>');
+for (i=0; i < S.length; i++)
+document.write('<layer name=nsSeconds'+i+' top=0 left=0 width=15 height=15><font face=Arial size=3 color='+sCol+'><center><b>'+S[i]+'</b></center></font></layer>');
+for (i=0; i < M.length; i++)
+document.write('<layer name=nsMinutes'+i+' top=0 left=0 width=15 height=15><font face=Arial size=3 color='+mCol+'><center><b>'+M[i]+'</b></center></font></layer>');
+for (i=0; i < H.length; i++)
+document.write('<layer name=nsHours'+i+' top=0 left=0 width=15 height=15><font face=Arial size=3 color='+hCol+'><center><b>'+H[i]+'</b></center></font></layer>');
+}
+if (ie){
+document.write('<div id="Od" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < D.length; i++)
+document.write('<div id="ieDate" style="position:absolute;top:0px;left:0;height:'+a+';width:'+a+';text-align:center">'+props2+D[i]+'</B></font></div>');
+document.write('</div></div>');
+document.write('<div id="Of" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < n; i++)
+document.write('<div id="ieFace" style="position:absolute;top:0px;left:0;height:'+a+';width:'+a+';text-align:center">'+props+Face[i]+'</B></font></div>');
+document.write('</div></div>');
+document.write('<div id="Oh" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < H.length; i++)
+document.write('<div id="ieHours" style="position:absolute;width:16px;height:16px;font-family:Arial;font-size:16px;color:'+hCol+';text-align:center;font-weight:bold">'+H[i]+'</div>');
+document.write('</div></div>');
+document.write('<div id="Om" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < M.length; i++)
+document.write('<div id="ieMinutes" style="position:absolute;width:16px;height:16px;font-family:Arial;font-size:16px;color:'+mCol+';text-align:center;font-weight:bold">'+M[i]+'</div>');
+document.write('</div></div>')
+document.write('<div id="Os" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+for (i=0; i < S.length; i++)
+document.write('<div id="ieSeconds" style="position:absolute;width:16px;height:16px;font-family:Arial;font-size:16px;color:'+sCol+';text-align:center;font-weight:bold">'+S[i]+'</div>');
+document.write('</div></div>')
+}
+(ns)?window.captureEvents(Event.MOUSEMOVE):0;
+function Mouse(evnt){
+ymouse = (ns)?evnt.pageY+ClockFromMouseY-(window.pageYOffset):event.y+ClockFromMouseY;
+xmouse = (ns)?evnt.pageX+ClockFromMouseX:event.x+ClockFromMouseX;
+}
+(ns)?window.onMouseMove=Mouse:document.onmousemove=Mouse;
+function ClockAndAssign(){
+time = new Date ();
+secs = time.getSeconds();
+sec = -1.57 + Math.PI * secs/30;
+mins = time.getMinutes();
+min = -1.57 + Math.PI * mins/30;
+hr = time.getHours();
+hrs = -1.575 + Math.PI * hr/6+Math.PI*parseInt(time.getMinutes())/360;
+if (ie){
+Od.style.top=window.document.body.scrollTop;
+Of.style.top=window.document.body.scrollTop;
+Oh.style.top=window.document.body.scrollTop;
+Om.style.top=window.document.body.scrollTop;
+Os.style.top=window.document.body.scrollTop;
+}
+for (i=0; i < n; i++){
+ var F=(ns)?document.layers['nsFace'+i]:ieFace[i].style;
+ F.top=y[i] + ClockHeight*Math.sin(-1.0471 + i*Split*Math.PI/180)+scrll;
+ F.left=x[i] + ClockWidth*Math.cos(-1.0471 + i*Split*Math.PI/180);
+ }
+for (i=0; i < H.length; i++){
+ var HL=(ns)?document.layers['nsHours'+i]:ieHours[i].style;
+ HL.top=y[i]+HandY+(i*HandHeight)*Math.sin(hrs)+scrll;
+ HL.left=x[i]+HandX+(i*HandWidth)*Math.cos(hrs);
+ }
+for (i=0; i < M.length; i++){
+ var ML=(ns)?document.layers['nsMinutes'+i]:ieMinutes[i].style;
+ ML.top=y[i]+HandY+(i*HandHeight)*Math.sin(min)+scrll;
+ ML.left=x[i]+HandX+(i*HandWidth)*Math.cos(min);
+ }
+for (i=0; i < S.length; i++){
+ var SL=(ns)?document.layers['nsSeconds'+i]:ieSeconds[i].style;
+ SL.top=y[i]+HandY+(i*HandHeight)*Math.sin(sec)+scrll;
+ SL.left=x[i]+HandX+(i*HandWidth)*Math.cos(sec);
+ }
+for (i=0; i < D.length; i++){
+ var DL=(ns)?document.layers['nsDate'+i]:ieDate[i].style;
+ DL.top=Dy[i] + ClockHeight*1.5*Math.sin(currStep+i*Dsplit*Math.PI/180)+scrll;
+ DL.left=Dx[i] + ClockWidth*1.5*Math.cos(currStep+i*Dsplit*Math.PI/180);
+ }
+currStep-=step;
+}
+function Delay(){
+scrll=(ns)?window.pageYOffset:0;
+Dy[0]=Math.round(DY[0]+=((ymouse)-DY[0])*speed);
+Dx[0]=Math.round(DX[0]+=((xmouse)-DX[0])*speed);
+for (i=1; i < D.length; i++){
+Dy[i]=Math.round(DY[i]+=(Dy[i-1]-DY[i])*speed);
+Dx[i]=Math.round(DX[i]+=(Dx[i-1]-DX[i])*speed);
+}
+y[0]=Math.round(Y[0]+=((ymouse)-Y[0])*speed);
+x[0]=Math.round(X[0]+=((xmouse)-X[0])*speed);
+for (i=1; i < n; i++){
+y[i]=Math.round(Y[i]+=(y[i-1]-Y[i])*speed);
+x[i]=Math.round(X[i]+=(x[i-1]-X[i])*speed);
+}
+ClockAndAssign();
+setTimeout('Delay()',20);
+}
+if (ns||ie)window.onload=Delay;
+</SCRIPT>
+
+
+
+<html>
+<head>
+<title>excresion</title>
+</head>
+
+<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" bgcolor="#999999">
+  <table bgcolor="#FFFFFF" align="center" width="1300">
+   <tr>
+    <td>
+     <table width="1300" align="center" bgcolor="#00BFFF">
+      <tr>
+       <td>
+        <center>
+         <small>
+          <i>GRACIAS POR VISITARME: </i>
+          te damos una cordial bienvenida a la segunda unidad de Biologia: PROCESO    Att: 4 alumnos del 4° A
+         </small>
+        </center>
+       </td>
+      </tr>
+     </table>
+  
+     <marquee scrollamount="10" direction="left" width="50%" bgcolor="#F7F7F7">
+      <img src="imagenes/pocoyo.gif" width="120" height="160">
+      <img src="imagenes/bio.gif" width="200" height="160">
+     </marquee>
+     <a href="http://www.cienciaybiologia.com/">
+      <img src="imagenes/biologia (1).jpg" width="643" height="160">
+     </a>
+  
+  <!--este es el menu-->
+     <table width="1000" align="center">
+      <tr>
+       <td>
+        <center>
+		<a href="homeostasis.html">
+         <img src="imagenes/gotop - copia.png">
+		 </a>
+         <a href="indice_porceso.html">
+          <img src="imagenes/proceso_2.jpg" width="1100">
+         </a>
+        <a href="reproduccion.html">
+		<img src="imagenes/gotop.png">
+		</a>
+        </center>
+       </td>
+      </tr>
+      <tr>
+      <td>
+       <table>
+        <tr>
+         <td>
+          <a href="nutricion.html">
+           <img src="imagenes/nutricion.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="respiracion.html">
+           <img src="imagenes/Respiracion.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="irritabilidad.html">
+           <img src="imagenes/irratabilidad.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="homeostasis.html">
+           <img src="imagenes/homeostasis.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+           <img src="imagenes/Excrecion.JPG" width="157" height="57">
+          
+         </td>
+         <td>
+          <a href="reproduccion.html">
+           <img src="imagenes/reproducion.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="transporte.html">
+           <img src="imagenes/sustancias.JPG" width="157" height="57">
+          </a>
+         </td>
+         <td>
+          <a href="cresimiento.html">
+           <img src="imagenes/crecimiento.JPG" width="157" height="57">
+          </a>
+         </td>
+        </tr>
+        <tr>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+         <td height="5" bgcolor="#0066CC"></td>
+        </tr>
+       </table>
+      </td>
+     </tr>
+    </table>
+  
+  <!--aqui va toda la informacion-->
+    <table width="1000" align="center">
+     <tr>
+      <td>
+       
+
+<font color="#1E90FF"><center><h1>Excresion.</h1></center></font>
+<font color="#000000"><center><img src="imagenes/escresion2.jpg" whidth="200" height="400" alt="imagen" border="10 "></center>
+<br><br>
+<br><br>
+<br><br>
+<h3>Excreción</h3>
+La excreción es un proceso fisiológico, que le permite al organismo eliminar sustancias de desecho, manteniendo la composición de la sangre y otros fluidos corporales en equilibrio.
+<br>
+<br>
+<big><h3>Sustancias de excreción</h3></big>
+<br>
+Las sustancias que se deben eliminar son enormemente variadas, pero las más abundantes son el dióxido de carbono,y los nitrogenados que se producen por alteración de grupos amino resultantes del catabolismo (degradación) de las proteínas. La sustancia excretada puede ser:
+	Amoníaco. Es excretado por invertebrados acuáticos, peces óseos y larvas de anfibios. Es muy tóxico pero, por su gran solubilidad y difusión, el agua circundante lo diluye y arrastra con rapidez. Los animales que excretan amoníaco se denominan amoniotélicos.
+	Urea. Se produce en el hígado por transformación rápida del amoníaco, resultando ser mucho menos tóxica y más soluble, aunque se difunde con mayor lentitud. Por esas razones puede acumularse en los tejidos sin causar daños y excretarse más concentrada. Es el principal desecho nitrogenado de los peces cartilaginosos, anfibios adultos y mamíferos. Los animales que excretan urea se denominan ureotélicos.
+	Ácido úrico. Es característico de animales que ingresan el agua en poca cantidad. Se forma a partir del amoníaco y otros derivados nitrogenados. Se excreta en forma de pasta blanca o sólido dado su mínima toxicidad y baja solubilidad. Es característico de animales adaptados a vivir en un ambiente seco y poner huevos con cáscara y membrana impermeables al agua, como por ejemplo insectos, moluscos pulmonados, reptiles y aves. Los animales que excretan ácido úrico se denominan uricotélicos.
+En los mamíferos, por ejemplo, los dos procesos excretores esenciales son la formación de orina en los riñones y la eliminación de dióxido de carbono en los pulmones. Estos desechos se eliminan por micción y respiración respectivamente. También la piel y el hígado intervienen en la elaboración o secreción de sustancias tóxicas. La piel interviene a través de la transpiración, expulsando sales y agua.
+En los artrópodos terrestres los órganos excretores suelen desembocar al principio del intestino, con lo que los productos de excreción se incorporan a las heces. Sin embargo, en los mamíferos, como el hombre, sólo el hígado vierte sustancias de excreción al intestino. De éstas, sólo los derivados del grupo hemo sanguíneo, como la bilirrubina, se incorporan de manera significativa a las heces, siendo la mayoría reabsorbidas al torrente sanguíneo y eliminadas finalmente por los riñones.por eso es que la excrecion se denomina que se efectua a traves del ano.
+<br>
+<br>
+<big><h3>Órganos excretores</h3></big>
+<br>
+
+En muchos invertebrados, los órganos excretores son los nefridios. Los artrópodos terrestres (arácnidos, insectos y miriápodos) tienen unos órganos especiales derivados del intestino conocidos como tubos de Malpighi.
+Los órganos del cuerpo humano y de los otros mamíferos que participan en la excreción:
+	Pulmones. Expulsan al aire el dióxido de carbono producido en la respiración celular.
+	Hígado. Expulsa al intestino productos tóxicos formados en las transformaciones químicas de los nutrientes, estos desechos se eliminan mediante las heces.
+	Glándulas sudoríparas. Junto con el agua filtran productos tóxicos, y eliminan el agua, aunque es una respuesta a la temperatura.
+	Riñones. Hacen una filtración selectiva de los compuestos tóxicos de la sangre. Regulan la cantidad de sales del organismo. Los riñones junto a los órganos canalizadores de la orina forman el aparato urinario.
+Excreción celular
+ 
+ 
+<table width=100% border="3"><tr><td>Diagrama de una célula animal típica:el meundo tiene muchas celulas:
+<center><img src="imagenes/celular.png" whidth="100" height="200" alt="imagen" border="10 "></center>
+<br>
+<br>
+    <center>1.Nucléolo
+    <br>
+    2.Núcleo celular
+    <br> 
+    3.Ribosoma 
+    <br>
+    4.Vesículas de secreción
+    <br> 
+    5.Retículo endoplasmático rugoso
+    <br>
+    6.Aparato de Golgi
+    <br> 
+    7.Citoesqueleto
+    <br> 
+    8.Retículo endoplasmático liso
+    <br> 
+    9.Mitocondria
+    <br>  
+    10.Vacuola
+    <br> 
+    11.Citosol
+    <br> 
+    12.Lisosoma
+    <br> 
+    13.Centríolo</center>
+</td></tr></table>
+
+   <br>
+<br>
+
+En las células, la excreción de las sustancias tóxicas gaseosas y líquidas se realiza a través de toda la membrana por ósmosis, difusión y diálisis.
+	Las sustancias sólidas solubles que son nocivas y se hallan mas concentradas en las células que en el exterior, son eliminadas por el fenómeno de transporte activo hasta que se consigue una menor concentración de ellas en el interior.
+<br>
+<br>
+<big><h3>Explicación</h3></big>
+<br>
+La célula al igual que todo ser vivo debe efectuar la excreción. Gracias a este proceso expulsa a través de su membrana celular las sustancias que no le son útiles así como los metabolismos tóxicos.Generalizando puede afirmarse que la excreción se produce mediante la exocitosis de vacuolas presentes en el citoplasma. Estas vacuólas formadas por una bicapa lipídica como la membrana celular se fusionan con la membrana liberando el contenido que mantenían dentro de la célula aislando del citoplasma al medio externo.
+Algunos organismos unicelulares que viven en el agua como el paramecio han desarrollado vacuolas contráctiles para expulsar el exceso de agua.
+<br><br><br><br>
+
+
+
+    </td>
+	
+    <!--aqui la publicidad-->
+      <td width="300">
+       <fieldset>
+        <legend align="center">
+         <img src="imagenes/btn_comment.gif">	
+        </legend>
+        <center>
+	 <small>¿CUAL ES TU NOMBRE? </small>
+         <input type="text"><br>
+        </center>
+        <br>
+        <table>
+         <tr>
+          <td>
+           <img src="imagenes/pocoyo_6.gif">       
+          </td>
+          <td>    
+           <small>¿QUE TAL TE PARECE ESTA PAGINA?: </small>
+           <select>
+	    <option>BUENA</option>
+	    <option>MUY BUENA</option>
+	    <option>EXELENTE</option>
+           </select>
+           <br><br>
+           <small>ENVIANOS TU COMENTARIO </small>
+           <textarea></textarea>	   
+          </td>
+         </tr>
+        </table>
+	   <center>
+	    <a href=".">
+	  <img src="imagenes/icon_8.gif" alt="enviar">
+	 </a>
+	 </center>
+	 <hr>
+	 <center>
+	 <img src="imagenes/btn_imprimir.gif">
+	 <img src="imagenes/Monitor.png">
+	 <img src="imagenes/smallEnvelope.jpg">
+	 <img src="imagenes/icon18.gif">
+	 <img src="imagenes/fc-edit.png">
+	 <img src="imagenes/rss.png">
+	 <img src="imagenes/trash.gif">
+	 <img src="imagenes/icon18_wrench_allbkg.png">
+	 <img src="imagenes/ico_aumentar.gif">
+	 <img src="imagenes/ico_reducir.gif">
+	 <img src="imagenes/icon.png">
+	 <hr>
+	 <img src="imagenes/ajx_loading.gif">
+	 <img src="imagenes/twitter-a.png" height="23">
+	 <img src="imagenes/blogger-simple-kahki.gif" height="23">
+	 <img src="imagenes/face_2.JPG" height="23">
+	 <img src="imagenes/ajx_loading.gif">
+	 </center>
+    </fieldset>
+	
+	<br><br>
+	<center>
+	<a href="http://biologia.laguia2000.com/">
+	<img src="imagenes/logo.png" width="290">
+	</a>
+	<em>Busca mas infotmacion en: <a href="http://biologia.laguia2000.com/">La guia</a></em>
+	</center>
+	<br><br>
+	
+	<fieldset>
+	 <legend align="center">
+	  <img src="imagenes/plus_google.gif">	 
+	  </legend>
+	<table>
+	 <tr>
+	  <td>
+	<font color="#3399FF">
+	 <big><big>OBTEN MAS INFORMACION</big></big>
+        </font>	  
+	  </td>
+	   <td>
+	   <img src="imagenes/pocoyo_8.gif" width="70" height="55" align="right">	  
+	   </td>
+	  </tr>
+	 </table>
+	 <br>
+	 <center>
+	  <big><i>
+	   <a href="http://www.cienciaybiologia.com/libros.html">LIBROS</a>
+	  </i></big>
+	 </center>
+	  <br>
+	 <table align="center">
+	  <tr>
+           <td>
+	  <b>Biología marina</b> 
+	  <a href="http://www.cienciaybiologia.com/libros/libros-biologia-marina.php">
+	   <img src="imagenes/biologia-marina.jpg" width="125" height="87">	 
+	  </a>
+	  <br><br>
+	 </td>
+	 <td>
+	  <b>Biología molecular</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-biologia-molecular.php">
+	   <img src="imagenes/biologia-molecular.jpg" width="125" height="87">	
+	  </a>
+	  <br><br>
+	 </td>
+	 </tr>
+	 <tr>
+	 <td>
+	  <b>Botánica</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-botanica.php">
+	   <img src="imagenes/botanica.jpg" width="125" height="87">	  
+	   </a>
+	   <br><br>
+	 </td>
+	 <td>
+	  <b>Ecología</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-ecologia.php">
+	   <img src="imagenes/ecologia.jpg" width="125" height="87">	  
+	  </a>
+	  <br><br>
+	 </td>
+	 </tr>
+	 <tr>
+	 <td>
+	   <small><b>Ecologismo y lifestyle</b></small>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-ecologismo-lifestyle.php">
+	   <img src="imagenes/ecologismo.jpg" width="125" height="87">	  
+	  </a>
+	  <br><br>
+  	 </td>
+	 <td>
+	  <b>Estudios y ensayos</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-estudios-ensayos-cientificos.php">
+	   <img src="imagenes/ensayos.jpg" width="125" height="87">	  
+	  </a>
+	  <br><br>
+	 </td>
+	 </tr>
+	 <tr>
+	 <td>
+	  <b>Microbiología</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-microbiologia.php">
+	  <img src="imagenes/microbiologia.gif" width="125" height="87">	  
+	  </a>
+	 </td>
+	 <td>
+	  <b>Guías de especies</b>
+	  <a href="http://www.cienciaybiologia.com/libros/libros-guia-especies.php">
+	  <img src="imagenes/anemona-incrustante-amarilla-1-p.jpg" width="125" height="87">	  
+	  </a>
+	 </td>
+	 </tr>
+	 </table>
+	</fieldset>
+	
+	<br><br>
+	<center>
+	<a href="x.html">
+	 <img src="imagenes/creatividad.png" width="295">	 
+	 </a>
+	<br><br>
+	<a href="https://www.google.com.mx/">
+	<img src="imagenes/google.png" width="295">
+	</a>
+	<br><br>
+	 <img src="imagenes/pocoyo_5.gif">
+	 <img src="imagenes/abuelos.jpg" width="295">
+	 <br>
+	 <em>Si te pierdes en los juegos, la vida pasara sin que te des cuenta</em>
+	<br><br>
+	<img src="imagenes/banana.jpg" width="295">
+        <big>Has ejercicio</big>
+	</center>
+    </td>
+   </tr>
+  </table>
+  
+  
+  <!--cita biblografica: http://hnncbiol.blogspot.mx/2008/01/nutricion-de-los-seres-vivos.html-->
+  <h2><tt>Agradecemos a: <a href="http://hnncbiol.blogspot.mx/2008/01/nutricion-de-los-seres-vivos.html">CIENCIAS BIOLOGICAS
+y Educación para la Salud</a>  por la informacion</tt></h2>
+  
+  <hr>
+  <table align="center">
+   <caption align="right" valign="top">
+   Si te gusto la pagina, contactanos
+   </caption>
+   <tr>
+    <td>
+	<a href="homeostasis.html">
+	 <img src="imagenes/gotop - copia.png">
+	 </a>
+	</td>
+    <td>
+	<img src="imagenes/pocoyo_3.gif">
+    </td>
+    <td>
+	 <table>
+	  <tr>
+	   <td>
+	 <img src="imagenes/cesar.jpg" width="35" height="35">
+	   </td>
+	   <td>
+	 <strong>Cesar Gonzalez</strong>
+	   </td>
+	   <td>
+	 <img src="imagenes/email.jpg" height="35">
+	 <a href="https://www.facebook.com/cesar.gonzalezhernandez.77">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+	   </td>
+	   <td width="20">
+	   </td>
+	   <td>
+	 <img src="imagenes/andy.jpg" width="35" height="35">
+	   </td>
+	   <td>
+	 <strong>Andy Martinez</strong>
+	   </td>
+	   <td>
+	 <img src="imagenes/email.jpg" height="35">
+	 <a href="https://www.facebook.com/andy.martinezgonzalez.10">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+	  </td>
+	  </tr>
+	  <tr>
+	   <td>
+           <img src="imagenes/isela.jpg" width="35" height="35">
+          </td>
+          <td>
+           <strong>Nenita Gomez</strong>
+          </td>
+          <td>
+           <img src="imagenes/email.jpg" height="35">
+           <a href="">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+          </td>
+          <td>
+          </td>
+          <td>
+           <img src="imagenes/chilo.jpg" width="35" height="35">
+          </td>
+          <td>
+           <strong>Isidro Molina</strong>
+          </td>
+          <td>
+           <img src="imagenes/email.jpg" height="35">
+           <a href="https://www.facebook.com/isidro.molinavillanueva">
+	 <img src="imagenes/face.jpg" height="35">
+	 </a>
+         <a href="https://twitter.com/">
+	 <img src="imagenes/twiter.jpg" height="35">
+         </a>
+          </td>
+         </tr>
+        </table>
+		<td>
+		<a href="reproduccion.html">
+		 <img src="imagenes/gotop.png">
+		 </a>
+       </td>
+      </tr>
+     </table>
+     <center>
+      <a href="https://www.facebook.com/">
+       <img src="imagenes/17-728x90.jpg">
+      </a>
+     </center>
+    </td>
+   </tr>
+  </table> 
+ <br>
+ </body>
+</html>
